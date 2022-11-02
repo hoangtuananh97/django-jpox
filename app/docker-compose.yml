@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres
+    ports:
+      - "5433:5432"
+    container_name: jbox_db
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - jbox_web
+
+  web:
+    build:
+      context: .
+    environment:
+      - DJANGO_READ_ENV_FILE=True
+    env_file: .env
+    container_name: jbox_web
+    command: >
+      bash -c "pip install -r requirements.txt &&
+      python3 manage.py makemigrations &&
+      python3 manage.py migrate &&
+      python3 manage.py runserver 0.0.0.0:8001"
+    ports:
+      - "8001:8001"
+    volumes:
+      - ".:/usr/src/app/"
+      - static_files:/usr/src/app/staticfiles
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - jbox_web
+
+volumes:
+  static_files:
+  postgres_data:
+    driver: local
+
+networks:
+  jbox_web:
+    driver: bridge
