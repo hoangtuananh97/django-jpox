@@ -6,28 +6,57 @@ from api.user.models import User
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "id",
+            "email",
+            "phone",
+            "avatar",
+            "fullname"
+        ]
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True, max_length=255)
+    phone = serializers.CharField(required=True, max_length=15)
+    first_name = serializers.CharField(required=False, allow_null=True, allow_blank=True, max_length=150)
+    last_name = serializers.CharField(required=False, allow_null=True, allow_blank=True, max_length=150)
+
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "id",
+            "email",
+            "phone",
+            "avatar",
+            "first_name",
+            "last_name"
+        ]
 
     def validate(self, attrs):
         return attrs
 
     def create(self, validated_data):
-        pass
+        return User.objects.create_user(**validated_data)
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "id",
+            "email",
+            "phone",
+            "avatar",
+            "fullname"
+        ]
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=False, allow_null=True, allow_blank=True, max_length=255)
+    phone = serializers.CharField(required=False, allow_null=True, allow_blank=True, max_length=15)
+    first_name = serializers.CharField(required=False, allow_null=True, allow_blank=True, max_length=150)
+    last_name = serializers.CharField(required=False, allow_null=True, allow_blank=True, max_length=150)
+
     class Meta:
         model = User
         fields = "__all__"
@@ -36,7 +65,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance, validated_data):
-        pass
+        if email := validated_data.get("email"):
+            instance.email = email
+        if phone := validated_data.get("phone"):
+            instance.phone = phone
+        if first_name := validated_data.get("first_name"):
+            instance.first_name = first_name
+        if last_name := validated_data.get("last_name"):
+            instance.last_name = last_name
+        instance.save()
 
 
 class UserDeleteSerializer(serializers.ModelSerializer):
