@@ -91,7 +91,7 @@ DATABASES = {
         "PASSWORD": env("POSTGRES_PASSWORD"),
         "HOST": env("POSTGRES_HOST"),
         "PORT": env("POSTGRES_PORT"),
-        "CONN_MAX_AGE": int(env("POSTGRES_CONN_MAX_AGE")),
+        "CONN_MAX_AGE": 600,
     }
 }
 
@@ -155,5 +155,5 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-# AUTH_USER_MODEL = 'api.user'
+AUTH_USER_MODEL = 'user.User'
 
