@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 RUN apt-get update \
-    && apt-get install -y build-essential python3-dev libpq-dev \
+    && apt-get install -y build-essential python3-dev libpq-dev gettext \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 COPY ./requirements.txt .
