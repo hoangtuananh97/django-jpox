@@ -8,14 +8,15 @@ services:
     container_name: jbox_db
     env_file: .env
     environment:
-      POSTGRES_HOST_AUTH_METHOD: md5
+      - DJANGO_READ_ENV_FILE=True
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
-      timeout: 15s
-      retries: 10
+      timeout: 20s
+      retries: 15
     networks:
       - jbox_web
 
@@ -26,13 +27,12 @@ services:
       - DJANGO_READ_ENV_FILE=True
     env_file: .env
     container_name: jbox_web
-#    command: >
-#      bash -c "pip install -r requirements.txt &&
-#      python3 manage.py makemigrations &&
-#      python3 manage.py migrate &&
-#      python3 manage.py runserver 0.0.0.0:8001"
+    command: >
+      bash -c "python3 manage.py makemigrations &&
+      python3 manage.py migrate &&
+      python3 manage.py runserver 0.0.0.0:8001"
     ports:
-      - "8000:8000"
+      - "8001:8001"
     volumes:
       - ".:/usr/src/app/"
       - static_files:/usr/src/app/staticfiles

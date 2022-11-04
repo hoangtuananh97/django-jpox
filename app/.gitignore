@@ -138,3 +138,4 @@ db/mysql_init/
 # key file for cloudfront signing
 cloudfront.pem
 staticfiles
+data
