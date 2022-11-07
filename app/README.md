@@ -13,4 +13,5 @@ python manage.py collectstatic
 
 ## Create i18n
 python manage.py makemessages --all
+
 python manage.py compilemessages
